@@ -20,7 +20,7 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
     useEffect(() => {
         const updateWikiUrl: () => void = async () => {
             if (wikipediaPageId) {
-                const url = await getWikipediaFullUrl(wikipediaPageId)
+                const url = await getWikipediaFullUrl(wikipediaPageId);
                 setwikipediaPageUrl(url);
             }
         };
