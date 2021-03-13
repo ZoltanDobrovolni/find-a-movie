@@ -3,7 +3,7 @@ import { Paper, Button, CircularProgress, Divider, Tooltip, Typography, Link } f
 import Rating from '@material-ui/lab/Rating';
 import useStyles from '../styles/styles';
 import { Movie } from '../types/types';
-import { searchForWikipediaMovie, getWikipediaFullUrl } from '../apis/wikipediaAPI';
+import {searchForWikipediaMovie, getWikipediaFullUrl, getWikipediaPageExtract} from '../apis/wikipediaAPI';
 import { getIMDBFullUrl } from '../apis/imdbAPI';
 
 type MoviePaperProps = {
@@ -15,6 +15,7 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
     const [detailSnippet, setDetailSnippet] = useState<string | null>(null);
     const [wikipediaPageId, setWikipediaPageId] = useState<number | null>(null);
     const [wikipediaPageUrl, setwikipediaPageUrl] = useState<string | null>(null);
+    const [wikipediaPageExtract, setwikipediaPageExtract] = useState<string | null>(null);
     const [imdbPageUrl, setimdbPageUrl] = useState<string | null>(null);
 
     useEffect(() => {
@@ -22,6 +23,8 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
             if (wikipediaPageId) {
                 const url = await getWikipediaFullUrl(wikipediaPageId);
                 setwikipediaPageUrl(url);
+                const extract = await getWikipediaPageExtract(wikipediaPageId);
+                setwikipediaPageExtract(extract);
             }
         };
         updateWikiUrl();
@@ -32,7 +35,7 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
     const handleTitleClick = async () => {
         if (!detailSnippet) {
             const wikipediaResult = await searchForWikipediaMovie(movie.name);
-            setDetailSnippet(wikipediaResult.snippet);
+            // setDetailSnippet(wikipediaResult.snippet);
             setWikipediaPageId(wikipediaResult.pageid);
 
             getIMDBFullUrl(movie.name, setimdbPageUrl);
@@ -44,13 +47,13 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
     const concatenatedGenres = movie.genres.map(genre => genre.name).join(', ');
 
     return (
-        <Paper className={`${classes.padding} ${classes.margin}`}>
+        <Paper className={`${classes.padding} ${classes.margin} ${classes.paper}`}>
             {/*<Button color="primary" onClick={handleTitleClick}>{movie.name}</Button>*/}
-            <Link href="#" onClick={handleTitleClick}>
+            <Link onClick={handleTitleClick}>
                 {movie.name}
             </Link>
             <br></br>
-            <Typography variant="body1" gutterBottom>
+            <Typography variant="body2" gutterBottom>
                 { concatenatedGenres }
             </Typography>
 
@@ -66,12 +69,14 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
                 isDetailsOpen &&
                 <>
                     <Divider variant="middle" />
-                    <h4>Details</h4>
-                    { (detailSnippet && wikipediaPageUrl && imdbPageUrl) ?
+                    <Typography variant="body1" gutterBottom>
+                        Details
+                    </Typography>
+                    { (wikipediaPageExtract && wikipediaPageUrl && imdbPageUrl) ?
                         <>
-                            <p>
-                                {detailSnippet}
-                            </p>
+                            <Typography variant="body2" gutterBottom className={classes.overflowEllipsis}>
+                                {wikipediaPageExtract}
+                            </Typography>
                             <a href={wikipediaPageUrl} target="_blank" rel="noreferrer">
                                 Wikipedia page
                             </a>

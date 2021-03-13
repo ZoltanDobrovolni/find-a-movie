@@ -53,27 +53,27 @@ export const getWikipediaFullUrl = async (pageId: number): Promise<string> => {
     }
 }
 
-// export const getWikipediaPageExtract = async (pageId: number): Promise<string> => {
-//     const params =  {
-//         action: 'query',
-//         prop: 'extracts',
-//         pageids: pageId,
-//         inprop: 'url',
-//         format: 'json',
-//         explaintext: true,
-//         exintro: true,
-//         origin: '*',
-//     };
-//     try {
-//         const result = await axios.get(BASE_URL,  { params });
-//         // console.log(result);
-//         console.log(result.data.query.pages[pageId].fullurl);
-//         return result.data.query.pages[pageId].fullurl;
-//     } catch (error) {
-//         console.error(error);
-//         return 'mock_url';
-//     }
-// }
+export const getWikipediaPageExtract = async (pageId: number): Promise<string> => {
+    const params =  {
+        action: 'query',
+        prop: 'extracts',
+        pageids: pageId,
+        inprop: 'url',
+        format: 'json',
+        explaintext: true,
+        exintro: true,
+        origin: '*',
+    };
+    try {
+        const result = await axios.get(BASE_URL,  { params });
+        console.log('EEEEEEEEEEExtract: ');
+        console.log(result.data.query.pages[pageId].extract);
+        return result.data.query.pages[pageId].extract;
+    } catch (error) {
+        console.error(error);
+        return Promise.reject(error);
+    }
+}
 //
 // export const getWikipediaFullUrlByTitle = async (title: string): Promise<string> => {
 //     const params =  {

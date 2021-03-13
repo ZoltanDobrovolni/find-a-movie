@@ -7,6 +7,7 @@ type MovieSearchResultProps = {
 }
 
 const MovieSearchResults: FC<MovieSearchResultProps> = ({ allMovies }) => {
+    console.log(allMovies.map(m => m.id).join(', '))
     return (
         <>
             {allMovies.map(movie => (
