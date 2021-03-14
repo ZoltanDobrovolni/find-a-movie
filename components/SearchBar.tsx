@@ -34,15 +34,18 @@ const SearchBar : FC<SearchBarProps> = ({ handleSearchResultChange }) => {
     }, [data, handleSearchResultChange, error]);
 
     const handleClick: SearchButtonEventHandler = async () => {
-        // console.log(searchInputValue);
-        // console.log(data);
         setSearchValue(searchInputValue);
     }
+
+    const handleSubmit = e => {
+        e.preventDefault();
+        handleClick();
+    };
 
     const handleSearchInputChange: InputChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => setSearchInputValue(event.target.value);
 
     return (
-        <Paper component="form" className={classes.root}>
+        <Paper component="form" onSubmit={handleSubmit} className={classes.root}>
             <InputBase
                 className={classes.input}
                 placeholder="Search Your Movie"
