@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useState } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import { Paper, IconButton, InputBase, CircularProgress, Box } from '@material-ui/core';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import useStyles from '../styles/styles';
-import { Movie, MoviesSearchQueryResult, SearchResult } from '../types/types';
+import { Movie, MoviesSearchQueryResult } from '../types/types';
 import { SEARCH_MOVIE_QUERY } from '../apis/theMovieDatabaseAPI';
 
 type SearchButtonEventHandler = () => void;
@@ -17,12 +17,10 @@ type SearchBarProps = {
 
 const SearchBar : FC<SearchBarProps> = ({ handleSearchResultChange }) => {
     const [searchInputValue, setSearchInputValue] = useState<string>('');
-    const [searchValue, setSearchValue] = useState<string | null>(null);
     const classes = useStyles();
 
-    const { loading, error, data } = useQuery<MoviesSearchQueryResult, MoviesSearchQueryVars>(
-        SEARCH_MOVIE_QUERY,
-        { variables: { title: searchValue } }
+    const [getMovies, { loading, error, data }] = useLazyQuery<MoviesSearchQueryResult, MoviesSearchQueryVars>(
+        SEARCH_MOVIE_QUERY
     );
 
     useEffect(() => {
@@ -36,13 +34,13 @@ const SearchBar : FC<SearchBarProps> = ({ handleSearchResultChange }) => {
         }
     }, [data, handleSearchResultChange, error, loading]);
 
-    const handleClick: SearchButtonEventHandler = async () => {
-        setSearchValue(searchInputValue);
+    const handleSearch: SearchButtonEventHandler = () => {
+        getMovies({ variables: { title: searchInputValue }});
     }
 
     const handleSubmit = e => {
         e.preventDefault();
-        handleClick();
+        handleSearch();
     };
 
     const handleSearchInputChange: InputChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => setSearchInputValue(event.target.value);
@@ -57,12 +55,12 @@ const SearchBar : FC<SearchBarProps> = ({ handleSearchResultChange }) => {
                 value={searchInputValue}
                 onChange={handleSearchInputChange}
             />
-            {loading && searchValue ?
+            {loading ?
                 <Box component="span" m={1} className={classes.searchBarSpinner}>
                     <CircularProgress size="1rem" />
                 </Box>
                 :
-                <IconButton onClick={handleClick} disabled={loading} className={classes.iconButton} aria-label="search">
+                <IconButton onClick={handleSearch} disabled={loading} className={classes.iconButton} aria-label="search">
                     <SearchIcon/>
                 </IconButton>
             }
