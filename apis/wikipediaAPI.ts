@@ -3,60 +3,28 @@ import { WikipediaSearchResult } from '../types/types';
 
 const BASE_URL = 'https://en.wikipedia.org/w/api.php';
 
-export const searchForWikipediaMovie = async (movieTitle: string): Promise<WikipediaSearchResult> => {
+export const searchForWikipediaMovie = async (movieTitle: string, releaseYear: number): Promise<number> => {
     const params =  {
         action: 'query',
         list: 'search',
-        srsearch: `${movieTitle} movie`,
-
+        srsearch: `${movieTitle} movie ${releaseYear}`,
         format: 'json',
         origin: '*',
     };
     try {
-
         const result = await axios.get(BASE_URL,  { params });
-        // console.log("XXXXXXXXXXXX", result);
         const firstResult = result.data.query.search[0];
-        // data.query.search[0].pageid
-        // console.log("XXXXXXXXXXXX", firstResult.snippet);
-        return {
-            snippet: firstResult.snippet,
-            pageid: firstResult.pageid,
-        };
+        return firstResult.pageid;
     } catch (error) {
         console.error(error);
-        return {
-            snippet: 'mock_snippet',
-            pageid: 123456789,
-        };
+        return Promise.reject(error);
     }
 }
 
-export const getWikipediaFullUrl = async (pageId: number): Promise<string> => {
+export const getWikipediaInfoById = async (pageId: number): Promise<WikipediaSearchResult> => {
     const params =  {
         action: 'query',
-        prop: 'info',
-        pageids: pageId,
-        // titles: '', // todo can i remove pageId 'round',
-        inprop: 'url',
-        format: 'json',
-        origin: '*',
-    };
-    try {
-        const result = await axios.get(BASE_URL,  { params });
-        // console.log(result);
-        // console.log(result.data.query.pages[pageId].fullurl);
-        return result.data.query.pages[pageId].fullurl;
-    } catch (error) {
-        console.error(error);
-        return 'mock_url';
-    }
-}
-
-export const getWikipediaPageExtract = async (pageId: number): Promise<string> => {
-    const params =  {
-        action: 'query',
-        prop: 'extracts',
+        prop: 'info|extracts',
         pageids: pageId,
         inprop: 'url',
         format: 'json',
@@ -66,14 +34,65 @@ export const getWikipediaPageExtract = async (pageId: number): Promise<string> =
     };
     try {
         const result = await axios.get(BASE_URL,  { params });
-        console.log('EEEEEEEEEEExtract: ');
-        console.log(result.data.query.pages[pageId].extract);
-        return result.data.query.pages[pageId].extract;
+        // console.log(result.data.query.pages);
+        const [ wikiData ] = Object.values(result.data.query.pages);
+        // console.log(wikiData);
+        return wikiData as WikipediaSearchResult;
     } catch (error) {
         console.error(error);
         return Promise.reject(error);
     }
 }
+// export const getWikipediaInfoByTitle = async (movieTitle: string): Promise<WikipediaSearchResult> => {
+//     const params =  {
+//         action: 'query',
+//         // prop: 'info',
+//         // prop: 'extracts',
+//         prop: 'info|extracts',
+//         // pageids: movieTitle,
+//         // titles: movieTitle, // todo can i remove movieTitle 'round',
+//         titles: movieTitle, // todo can i remove movieTitle 'round',
+//         // srsearch: `${movieTitle} movie`,
+//         inprop: 'url',
+//         format: 'json',
+//         explaintext: true,
+//         exintro: true,
+//         origin: '*',
+//     };
+//     try {
+//         const result = await axios.get(BASE_URL,  { params });
+//         console.log(result.data.query.pages);
+//         const [ wikiData ] = Object.values(result.data.query.pages);
+//         console.log(wikiData);
+//         return wikiData as WikipediaSearchResult;
+//     } catch (error) {
+//         console.error(error);
+//         return Promise.reject(error);
+//     }
+// }
+//
+// export const getWikipediaPageExtract = async (pageId: string): Promise<string> => {
+//     const params =  {
+//         action: 'query',
+//         prop: 'extracts',
+//         // pageids: pageId,
+//         titles: pageId, // todo can i remove pageId 'round',
+//         inprop: 'url',
+//         format: 'json',
+//         explaintext: true,
+//         exintro: true,
+//         origin: '*',
+//     };
+//     try {
+//         const result = await axios.get(BASE_URL,  { params });
+//         console.log('EEEEEEEEEEExtract: ');
+//         console.log(result.data.query.pages[pageId].extract);
+//         return result.data.query.pages[pageId].extract;
+//     } catch (error) {
+//         console.error(error);
+//         return Promise.reject(error);
+//     }
+// }
 //
 // export const getWikipediaFullUrlByTitle = async (title: string): Promise<string> => {
 //     const params =  {

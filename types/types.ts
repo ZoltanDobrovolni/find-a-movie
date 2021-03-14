@@ -23,5 +23,6 @@ export type MoviesSearchQueryResult = {
 
 export type WikipediaSearchResult = {
     pageid: number;
-    snippet: string; 
+    fullurl: string;
+    extract: string;
 }
