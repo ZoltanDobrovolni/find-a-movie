@@ -18,6 +18,7 @@ type MoviePaperProps = {
 
 type GetMovieQueryVars = {
     id: number;
+    limit?: number;
 }
 
 type RelatedMoviesQueryResult = {
@@ -33,6 +34,9 @@ const useStyles = makeStyles({
     paper: {
         width: '60ch',
     },
+    widthFitContent: {
+        width: 'fit-content',
+    }
 });
 
 const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
@@ -108,7 +112,7 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
                             <Typography variant="body2" gutterBottom >
                                 {shortenString(wikipediaPageExtract)}
                             </Typography>
-                            <Container maxWidth="xs" className={classes.paddingSmall}>
+                            <Container className={clsx(classes.paddingSmall, classes.widthFitContent)}>
                                 <Box component="span" className={classes.margin}>
                                     <Link href={wikipediaPageUrl} target="_blank" rel="noreferrer">
                                         Wikipedia page
