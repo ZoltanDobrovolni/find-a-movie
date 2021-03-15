@@ -1,10 +1,18 @@
 import React, { FC, useEffect, useState } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
-import { Paper, IconButton, InputBase, CircularProgress, Box } from '@material-ui/core';
+import {
+    IconButton,
+    CircularProgress,
+    FormControl,
+    InputLabel,
+    OutlinedInput,
+    InputAdornment,
+} from '@material-ui/core';
 import { useLazyQuery } from '@apollo/client';
 import useStyles from '../styles/styles';
 import { Movie, MoviesSearchQueryResult } from '../types/types';
 import { SEARCH_MOVIE_QUERY } from '../apis/theMovieDatabaseAPI';
+import clsx from "clsx";
 
 type SearchButtonEventHandler = () => void;
 type InputChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -46,26 +54,35 @@ const SearchBar : FC<SearchBarProps> = ({ handleSearchResultChange }) => {
     const handleSearchInputChange: InputChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => setSearchInputValue(event.target.value);
 
     return (
-        <Paper component="form" onSubmit={handleSubmit} className={classes.searchPaper}>
-            <InputBase
-                className={classes.input}
-                placeholder="Search Your Movie"
-                inputProps={{ 'aria-label': 'search google maps' }}
-                disabled={loading}
+        <>
+        <FormControl component="form" className={clsx(classes.margin, classes.textField)} variant="outlined" disabled={loading} onSubmit={handleSubmit}>
+            <InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
+            <OutlinedInput
+                id="outlined-adornment-password"
+                type="text"
                 value={searchInputValue}
                 onChange={handleSearchInputChange}
+                endAdornment={
+                    <InputAdornment position="end">
+                        <IconButton
+                            aria-label="Search"
+                            onClick={handleSearch}
+                            edge="end"
+                            disabled={loading}
+                        >
+                            { loading ?
+                                <CircularProgress size="1rem"/>
+                                :
+                                <SearchIcon/>
+                            }
+                        </IconButton>
+                    </InputAdornment>
+                }
+                labelWidth={70}
             />
-            {loading ?
-                <Box component="span" m={1} className={classes.searchBarSpinner}>
-                    <CircularProgress size="1rem" />
-                </Box>
-                :
-                <IconButton onClick={handleSearch} disabled={loading} className={classes.iconButton} aria-label="search">
-                    <SearchIcon/>
-                </IconButton>
-            }
-        </Paper>
+        </FormControl>
+        </>
     );
-}
+};
 
 export default SearchBar;
