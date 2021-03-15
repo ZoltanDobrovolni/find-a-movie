@@ -1,34 +1,57 @@
 import React, { FC, useState, useEffect } from 'react';
-import { Paper, CircularProgress, Divider, Tooltip, Typography, Link } from '@material-ui/core';
+import { Paper, CircularProgress, Divider, Tooltip, Typography, Link, Button } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import useStyles from '../styles/styles';
 import { Movie } from '../types/types';
 import {getWikipediaInfoById, searchForWikipediaMovie} from '../apis/wikipediaAPI';
 import { getIMDBFullUrl } from '../apis/imdbAPI';
+import { useLazyQuery } from "@apollo/client";
+import { GET_MOVIE_QUERY } from "../apis/theMovieDatabaseAPI";
 
 type MoviePaperProps = {
     movie: Movie;
 }
 
+type GetMovieQueryVars = {
+    id: number;
+}
+
+type RelatedMoviesQueryResult = {
+    movie: {
+        id: number;
+        name: string;
+        similar: Movie[];
+    }
+}
+
 const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
     const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
-    // const [detailSnippet, setDetailSnippet] = useState<string | null>(null);
     const [wikipediaPageId, setWikipediaPageId] = useState<number | null>(null);
-    const [wikipediaPageUrl, setwikipediaPageUrl] = useState<string | null>(null);
-    const [wikipediaPageExtract, setwikipediaPageExtract] = useState<string | null>(null);
-    const [imdbPageUrl, setimdbPageUrl] = useState<string | null>(null);
+    const [wikipediaPageUrl, setWikipediaPageUrl] = useState<string | null>(null);
+    const [wikipediaPageExtract, setWikipediaPageExtract] = useState<string | null>(null);
+    const [imdbPageUrl, setImdbPageUrl] = useState<string | null>(null);
+    // const [tmdbMovieId, setTmdbMovieId] = useState<number | null>(null);
+    const [getMovies, { loading, error, data }] = useLazyQuery<RelatedMoviesQueryResult, GetMovieQueryVars>(GET_MOVIE_QUERY)
+
+
     const releaseYear = movie.releaseDate && (new Date(Date.parse(movie.releaseDate))).getUTCFullYear();
 
     useEffect(() => {
         const updateWikiUrl: () => void = async () => {
             if (wikipediaPageId) {
                 const wikipediaInfo = await getWikipediaInfoById(wikipediaPageId);
-                setwikipediaPageUrl(wikipediaInfo.fullurl);
-                setwikipediaPageExtract(wikipediaInfo.extract);
+                setWikipediaPageUrl(wikipediaInfo.fullurl);
+                setWikipediaPageExtract(wikipediaInfo.extract);
             }
         };
         updateWikiUrl();
     }, [wikipediaPageId]);
+
+    useEffect(() => {
+        if (data) {
+            console.log(`Related movies: `, data.movie.similar);
+        }
+    }, [data]);
 
     const classes = useStyles();
 
@@ -37,9 +60,14 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
             console.log(`Searching for movie: ${movie.name}, ${releaseYear}`)
             const wikipediaPageId = await searchForWikipediaMovie(movie.name, releaseYear);
             setWikipediaPageId(wikipediaPageId);
-            getIMDBFullUrl(movie.name, setimdbPageUrl);
+            getIMDBFullUrl(movie.name, setImdbPageUrl);
         }
         setIsDetailsOpen(!isDetailsOpen);
+    }
+
+    const handleRelatedClick = async () => {
+        console.log(`Searching for related movies: ${movie.id}`)
+        getMovies({ variables: { id: movie.id }});
     }
 
     // const releaseYear = movie.releaseDate && (new Date(Date.parse(movie.releaseDate))).getUTCFullYear();
@@ -80,6 +108,9 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
                             <a href={imdbPageUrl} target="_blank" rel="noreferrer">
                                 IMDB page
                             </a>
+                            <Button onClick={handleRelatedClick}>
+                                Related
+                            </Button>
                         </>
                         :
                         <CircularProgress />
