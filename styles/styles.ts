@@ -2,6 +2,9 @@ import {makeStyles, Theme, createStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({ // todo egésznek utánaolvasni, hogy kell jól csinálni
+        background: {
+            // backgroundColor: '#fafafa',
+        },
         searchPaper: {
             display: 'flex',
             alignItems: 'center',
@@ -9,6 +12,16 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         margin: {
             margin: theme.spacing(2),
+        },
+        marginHorizontalAuto: {
+            marginLeft: 'auto',
+            marginRight: 'auto',
+        },
+        paddingSmall: {
+            padding: theme.spacing(1),
+        },
+        paddingTopSmall: {
+            paddingTop: theme.spacing(1),
         },
         padding: {
             padding: theme.spacing(2),
@@ -34,7 +47,10 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         searchBarSpinner: {
             marginRight: '0.9rem'
-        }
+        },
+        textField: {
+            width: '25ch',
+        },
     }),
 );
 
