@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Grid, Box, Typography} from '@material-ui/core';
-import useStyles from '../styles/styles';
+import {makeStyles} from "@material-ui/core/styles";
+import {commonStyle} from '../styles/styles';
 import SearchBar from '../components/SearchBar';
 import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
 import MovieSearchResults from '../components/MovieSearchResults';
@@ -12,13 +13,15 @@ const client = new ApolloClient({
     cache: new InMemoryCache(),
 });
 
+const useStyles = makeStyles(commonStyle);
+
 const Home = () => {
     const [searchMovieResult, setSearchMovieResult] = useState<Movie[]>([]);
     const classes = useStyles();
 
     return (
         <ApolloProvider client={client}>
-            <Box className={classes.background}>
+            <Box>
                 <Grid container
                       direction="column"
                       justify="center"

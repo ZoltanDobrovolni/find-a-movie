@@ -8,8 +8,9 @@ import {
     OutlinedInput,
     InputAdornment,
 } from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
 import { useLazyQuery } from '@apollo/client';
-import useStyles from '../styles/styles';
+import {commonStyle} from '../styles/styles';
 import { Movie, MoviesSearchQueryResult } from '../types/types';
 import { SEARCH_MOVIE_QUERY } from '../apis/theMovieDatabaseAPI';
 import clsx from "clsx";
@@ -22,6 +23,13 @@ type MoviesSearchQueryVars = {
 type SearchBarProps = {
     handleSearchResultChange: (data: Movie[] | undefined) => void;
 }
+
+const useStyles = makeStyles({
+    ...commonStyle,
+    searchInputField: {
+        width: '40ch',
+    },
+});
 
 const SearchBar : FC<SearchBarProps> = ({ handleSearchResultChange }) => {
     const classes = useStyles();
@@ -47,7 +55,12 @@ const SearchBar : FC<SearchBarProps> = ({ handleSearchResultChange }) => {
     const handleSearchInputChange: InputChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => setSearchInputValue(event.target.value);
 
     return (
-        <FormControl component="form" className={clsx(classes.margin, classes.textField)} variant="outlined" disabled={loading} onSubmit={handleSubmit}>
+        <FormControl
+            component="form"
+            className={clsx(classes.margin, classes.searchInputField)}
+            variant="outlined"
+            disabled={loading} onSubmit={handleSubmit}
+        >
             <InputLabel htmlFor="movie-search-input">Search</InputLabel>
             <OutlinedInput
                 id="movie-search-input"

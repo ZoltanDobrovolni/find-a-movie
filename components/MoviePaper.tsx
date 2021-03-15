@@ -1,8 +1,9 @@
 import React, {FC, useState, useEffect} from 'react';
 import clsx from "clsx";
 import {Paper, CircularProgress, Divider, Tooltip, Typography, Link, Button, Box, Container} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
-import useStyles from '../styles/styles';
+import {commonStyle} from '../styles/styles';
 import {Movie} from '../types/types';
 import {getWikipediaInfoById, searchForWikipediaMovie} from '../apis/wikipediaAPI';
 import {getIMDBFullUrl} from '../apis/imdbAPI';
@@ -27,13 +28,20 @@ type RelatedMoviesQueryResult = {
     }
 }
 
+const useStyles = makeStyles({
+    ...commonStyle,
+    paper: {
+        width: '60ch',
+    },
+});
+
 const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
+    const classes = useStyles();
     const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
     const [wikipediaPageId, setWikipediaPageId] = useState<number | null>(null);
     const [wikipediaPageUrl, setWikipediaPageUrl] = useState<string | null>(null);
     const [wikipediaPageExtract, setWikipediaPageExtract] = useState<string | null>(null);
     const [imdbPageUrl, setImdbPageUrl] = useState<string | null>(null);
-    // const [tmdbMovieId, setTmdbMovieId] = useState<number | null>(null);
     const [getMovies, {loading, data}] = useLazyQuery<RelatedMoviesQueryResult, GetMovieQueryVars>(GET_MOVIE_QUERY)
 
 
@@ -60,7 +68,6 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
         }
     }, [data]);
 
-    const classes = useStyles();
 
     const handleTitleClick = async () => {
         if (!wikipediaPageId) {
@@ -80,7 +87,7 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
     const concatenatedGenres = movie.genres.map(genre => genre.name).join(', ');
 
     return (
-        <Paper className={clsx(classes.padding, classes.margin, classes.paper)}>
+        <Paper className={clsx(classes.padding, classes.marginBig, classes.paper)}>
             <Link variant="h6" onClick={handleTitleClick} className={classes.paddingTopSmall}>
                 {movie.name}
             </Link>
@@ -103,7 +110,7 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
                     </Typography>
                     {(wikipediaPageExtract && wikipediaPageUrl && imdbPageUrl) ?
                         <>
-                            <Typography variant="body2" gutterBottom className={classes.overflowEllipsis}>
+                            <Typography variant="body2" gutterBottom >
                                 {shortenString(wikipediaPageExtract)}
                             </Typography>
                             <Container maxWidth="xs" className={classes.paddingSmall}>
