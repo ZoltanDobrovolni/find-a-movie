@@ -21,7 +21,7 @@ type MoviesSearchQueryVars = {
     title: string;
 }
 type SearchBarProps = {
-    handleSearchResultChange: (data: Movie[] | undefined) => void;
+    handleSearchResultChange: (movies: Movie[] | undefined) => void;
 }
 
 const useStyles = makeStyles({
@@ -34,18 +34,18 @@ const useStyles = makeStyles({
 const SearchBar : FC<SearchBarProps> = ({ handleSearchResultChange }) => {
     const classes = useStyles();
     const [searchInputValue, setSearchInputValue] = useState<string>('');
-    const [getMovies, { loading, data }] = useLazyQuery<MoviesSearchQueryResult, MoviesSearchQueryVars>(
+    const [fetchMovies, { loading, data: movies }] = useLazyQuery<MoviesSearchQueryResult, MoviesSearchQueryVars>(
         SEARCH_MOVIE_QUERY
     );
 
     useEffect(() => {
-        if (data) {
-            handleSearchResultChange(data.searchMovies);
+        if (movies) {
+            handleSearchResultChange(movies.searchMovies);
         }
-    }, [data, handleSearchResultChange]);
+    }, [movies, handleSearchResultChange]);
 
     const handleSearch: SearchButtonEventHandler = () =>
-        getMovies({ variables: { title: searchInputValue }});
+        fetchMovies({ variables: { title: searchInputValue }});
 
     const handleSubmit = e => {
         e.preventDefault();

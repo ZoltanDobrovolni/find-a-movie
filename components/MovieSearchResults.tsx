@@ -3,15 +3,15 @@ import { Movie } from '../types/types';
 import MoviePaper from './MoviePaper';
 
 type MovieSearchResultProps = {
-    allMovies: Movie[];
-    setSearchMovieResult: (data: Movie[] | undefined) => void;
+    movies: Movie[];
+    setMovies: (movies: Movie[] | undefined) => void;
 }
 
-const MovieSearchResults: FC<MovieSearchResultProps> = ({ allMovies, setSearchMovieResult }) => {
+const MovieSearchResults: FC<MovieSearchResultProps> = ({ movies, setMovies }) => {
     return (
         <>
-            {allMovies.map(movie => (
-                <MoviePaper movie={movie} key={movie.id} setSearchMovieResult={setSearchMovieResult}/>
+            {movies.map(movie => (
+                <MoviePaper movie={movie} key={movie.id} setMovies={setMovies}/>
             ))}
         </>
     );

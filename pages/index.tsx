@@ -16,7 +16,7 @@ const client = new ApolloClient({
 const useStyles = makeStyles(commonStyle);
 
 const Home = () => {
-    const [searchMovieResult, setSearchMovieResult] = useState<Movie[]>([]);
+    const [movies, setMovies] = useState<Movie[]>([]);
     const classes = useStyles();
 
     return (
@@ -34,10 +34,10 @@ const Home = () => {
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <SearchBar handleSearchResultChange={(setSearchMovieResult)}/>
+                        <SearchBar handleSearchResultChange={(setMovies)}/>
                     </Grid>
                     <Grid item xs={12}>
-                        <MovieSearchResults allMovies={searchMovieResult} setSearchMovieResult={setSearchMovieResult}/>
+                        <MovieSearchResults movies={movies} setSearchMovieResult={setMovies}/>
                     </Grid>
                 </Grid>
             </Box>

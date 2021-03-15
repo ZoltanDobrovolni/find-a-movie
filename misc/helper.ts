@@ -1,6 +1,5 @@
 
-export const shortenString = (longText: string) => {
-    const minimumLengthOfShortenedText = 400;
+export const shortenString = (longText: string, minimumLengthOfShortenedText = 400) => {
     const indexOfDot = longText.indexOf('.', minimumLengthOfShortenedText);
     return longText.substring(0, indexOfDot).concat('...');
 }

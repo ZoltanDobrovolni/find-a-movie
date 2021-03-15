@@ -13,7 +13,7 @@ import {shortenString} from "../misc/helper";
 
 type MoviePaperProps = {
     movie: Movie;
-    setSearchMovieResult: (movies: Movie[] | undefined) => void;
+    setMovies: (movies: Movie[] | undefined) => void;
 }
 
 type GetMovieQueryVars = {
@@ -39,13 +39,13 @@ const useStyles = makeStyles({
     }
 });
 
-const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
+const MoviePaper: FC<MoviePaperProps> = ({movie, setMovies}) => {
     const classes = useStyles();
     const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
     const [wikipediaPageId, setWikipediaPageId] = useState<number | null>(null);
     const [wikipediaInfo, setWikipediaInfo] = useState<WikipediaSearchResult | null>(null);
     const [imdbPageUrl, setImdbPageUrl] = useState<string | null>(null);
-    const [getMovies, {loading: isRelatedMoviesLoading, data: relatedMoviesResult}] =
+    const [fetchRelatedMovies, {loading: isRelatedMoviesLoading, data: relatedMovies}] =
         useLazyQuery<RelatedMoviesQueryResult, GetMovieQueryVars>(GET_MOVIE_QUERY);
 
     const releaseYear = movie.releaseDate && (new Date(Date.parse(movie.releaseDate))).getUTCFullYear();
@@ -61,13 +61,13 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
     }, [wikipediaPageId]);
 
     useEffect(() => {
-        if (relatedMoviesResult) {
-            setSearchMovieResult([]);
+        if (relatedMovies) {
+            setMovies([]);
             setTimeout(() =>
-                setSearchMovieResult(relatedMoviesResult.movie.similar)
+                setMovies(relatedMovies.movie.similar)
             );
         }
-    }, [relatedMoviesResult]);
+    }, [relatedMovies]);
 
 
     const handleTitleClick = async () => {
@@ -80,7 +80,7 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
     }
 
     const handleRelatedClick = async () =>
-        getMovies({variables: {id: movie.id}});
+        fetchRelatedMovies({variables: {id: movie.id}});
 
     const concatenatedGenres = movie.genres.map(genre => genre.name).join(', ');
 
