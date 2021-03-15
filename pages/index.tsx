@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Grid, Box} from '@material-ui/core';
+import {Grid, Box, Typography} from '@material-ui/core';
 import useStyles from '../styles/styles';
 import SearchBar from '../components/SearchBar';
 import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
@@ -26,9 +26,9 @@ const Home = () => {
                       spacing={3}
                       className={classes.padding}>
                     <Grid item xs={12}>
-                        <h1>
+                        <Typography variant="h3">
                             Find a movie
-                        </h1>
+                        </Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <SearchBar handleSearchResultChange={(setSearchMovieResult)}/>

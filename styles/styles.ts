@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
             marginRight: '0.9rem'
         },
         textField: {
-            width: '25ch',
+            width: '40ch',
         },
     }),
 );

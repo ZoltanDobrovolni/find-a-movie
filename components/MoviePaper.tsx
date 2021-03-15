@@ -77,7 +77,6 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
         getMovies({variables: {id: movie.id}});
     }
 
-    // const releaseYear = movie.releaseDate && (new Date(Date.parse(movie.releaseDate))).getUTCFullYear();
     const concatenatedGenres = movie.genres.map(genre => genre.name).join(', ');
 
     return (
