@@ -37,7 +37,7 @@ const Home = () => {
                         <SearchBar handleSearchResultChange={(setMovies)}/>
                     </Grid>
                     <Grid item xs={12}>
-                        <MovieSearchResults movies={movies} setSearchMovieResult={setMovies}/>
+                        <MovieSearchResults movies={movies} setMovies={setMovies}/>
                     </Grid>
                 </Grid>
             </Box>
