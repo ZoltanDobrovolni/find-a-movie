@@ -10,6 +10,7 @@ import { GET_MOVIE_QUERY } from "../apis/theMovieDatabaseAPI";
 
 type MoviePaperProps = {
     movie: Movie;
+    setSearchMovieResult: (data: Movie[] | undefined) => void;
 }
 
 type GetMovieQueryVars = {
@@ -24,7 +25,7 @@ type RelatedMoviesQueryResult = {
     }
 }
 
-const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
+const MoviePaper: FC<MoviePaperProps> = ({ movie, setSearchMovieResult }) => {
     const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
     const [wikipediaPageId, setWikipediaPageId] = useState<number | null>(null);
     const [wikipediaPageUrl, setWikipediaPageUrl] = useState<string | null>(null);
@@ -50,6 +51,10 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
     useEffect(() => {
         if (data) {
             console.log(`Related movies: `, data.movie.similar);
+            setSearchMovieResult([]);
+            setTimeout(() =>
+                setSearchMovieResult(data.movie.similar)
+            );
         }
     }, [data]);
 

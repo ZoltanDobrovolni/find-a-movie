@@ -1,17 +1,17 @@
 import React, { FC } from 'react';
-import { SearchResult, Movie } from '../types/types';
+import { Movie } from '../types/types';
 import MoviePaper from './MoviePaper';
 
 type MovieSearchResultProps = {
     allMovies: Movie[];
+    setSearchMovieResult: (data: Movie[] | undefined) => void;
 }
 
-const MovieSearchResults: FC<MovieSearchResultProps> = ({ allMovies }) => {
-    console.log(allMovies.map(m => m.id).join(', '))
+const MovieSearchResults: FC<MovieSearchResultProps> = ({ allMovies, setSearchMovieResult }) => {
     return (
         <>
             {allMovies.map(movie => (
-                <MoviePaper movie={movie} key={movie.id} />
+                <MoviePaper movie={movie} key={movie.id} setSearchMovieResult={setSearchMovieResult}/>
             ))}
         </>
     );
