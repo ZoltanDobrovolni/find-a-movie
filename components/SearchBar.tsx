@@ -24,27 +24,20 @@ type SearchBarProps = {
 }
 
 const SearchBar : FC<SearchBarProps> = ({ handleSearchResultChange }) => {
-    const [searchInputValue, setSearchInputValue] = useState<string>('');
     const classes = useStyles();
-
-    const [getMovies, { loading, error, data }] = useLazyQuery<MoviesSearchQueryResult, MoviesSearchQueryVars>(
+    const [searchInputValue, setSearchInputValue] = useState<string>('');
+    const [getMovies, { loading, data }] = useLazyQuery<MoviesSearchQueryResult, MoviesSearchQueryVars>(
         SEARCH_MOVIE_QUERY
     );
 
     useEffect(() => {
-        // console.error(error);
-        if (loading) {
-
-        }
         if (data) {
-            console.log(data.searchMovies)
             handleSearchResultChange(data.searchMovies);
         }
-    }, [data, handleSearchResultChange, error, loading]);
+    }, [data, handleSearchResultChange]);
 
-    const handleSearch: SearchButtonEventHandler = () => {
+    const handleSearch: SearchButtonEventHandler = () =>
         getMovies({ variables: { title: searchInputValue }});
-    }
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -54,11 +47,10 @@ const SearchBar : FC<SearchBarProps> = ({ handleSearchResultChange }) => {
     const handleSearchInputChange: InputChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => setSearchInputValue(event.target.value);
 
     return (
-        <>
         <FormControl component="form" className={clsx(classes.margin, classes.textField)} variant="outlined" disabled={loading} onSubmit={handleSubmit}>
-            <InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
+            <InputLabel htmlFor="movie-search-input">Search</InputLabel>
             <OutlinedInput
-                id="outlined-adornment-password"
+                id="movie-search-input"
                 type="text"
                 value={searchInputValue}
                 onChange={handleSearchInputChange}
@@ -81,7 +73,6 @@ const SearchBar : FC<SearchBarProps> = ({ handleSearchResultChange }) => {
                 labelWidth={70}
             />
         </FormControl>
-        </>
     );
 };
 
