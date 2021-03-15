@@ -15,6 +15,9 @@ export const commonStyle = {
     padding: {
         padding: 10,
     },
+    paddingBig: {
+        padding: 20,
+    },
     paddingTopSmall: {
         paddingTop: 5,
     },

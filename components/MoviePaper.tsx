@@ -4,7 +4,7 @@ import {Paper, CircularProgress, Divider, Tooltip, Typography, Link, Button, Box
 import {makeStyles} from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
 import {commonStyle} from '../styles/styles';
-import {Movie} from '../types/types';
+import {Movie, WikipediaSearchResult} from '../types/types';
 import {getWikipediaInfoById, searchForWikipediaMovie} from '../apis/wikipediaAPI';
 import {fetchIMDBFullUrl} from '../apis/imdbAPI';
 import {useLazyQuery} from "@apollo/client";
@@ -13,7 +13,7 @@ import {shortenString} from "../misc/helper";
 
 type MoviePaperProps = {
     movie: Movie;
-    setSearchMovieResult: (data: Movie[] | undefined) => void;
+    setSearchMovieResult: (movies: Movie[] | undefined) => void;
 }
 
 type GetMovieQueryVars = {
@@ -43,10 +43,10 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
     const classes = useStyles();
     const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
     const [wikipediaPageId, setWikipediaPageId] = useState<number | null>(null);
-    const [wikipediaPageUrl, setWikipediaPageUrl] = useState<string | null>(null);
-    const [wikipediaPageExtract, setWikipediaPageExtract] = useState<string | null>(null);
+    const [wikipediaInfo, setWikipediaInfo] = useState<WikipediaSearchResult | null>(null);
     const [imdbPageUrl, setImdbPageUrl] = useState<string | null>(null);
-    const [getMovies, {loading, data}] = useLazyQuery<RelatedMoviesQueryResult, GetMovieQueryVars>(GET_MOVIE_QUERY)
+    const [getMovies, {loading: isRelatedMoviesLoading, data: relatedMoviesResult}] =
+        useLazyQuery<RelatedMoviesQueryResult, GetMovieQueryVars>(GET_MOVIE_QUERY);
 
     const releaseYear = movie.releaseDate && (new Date(Date.parse(movie.releaseDate))).getUTCFullYear();
 
@@ -54,21 +54,20 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
         const updateWikiUrl: () => void = async () => {
             if (wikipediaPageId) {
                 const wikipediaInfo = await getWikipediaInfoById(wikipediaPageId);
-                setWikipediaPageUrl(wikipediaInfo.fullurl);
-                setWikipediaPageExtract(wikipediaInfo.extract);
+                setWikipediaInfo(wikipediaInfo);
             }
         };
         updateWikiUrl();
     }, [wikipediaPageId]);
 
     useEffect(() => {
-        if (data) {
+        if (relatedMoviesResult) {
             setSearchMovieResult([]);
             setTimeout(() =>
-                setSearchMovieResult(data.movie.similar)
+                setSearchMovieResult(relatedMoviesResult.movie.similar)
             );
         }
-    }, [data]);
+    }, [relatedMoviesResult]);
 
 
     const handleTitleClick = async () => {
@@ -86,7 +85,7 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
     const concatenatedGenres = movie.genres.map(genre => genre.name).join(', ');
 
     return (
-        <Paper className={clsx(classes.padding, classes.marginBig, classes.paper)}>
+        <Paper className={clsx(classes.paddingBig, classes.marginBig, classes.paper)}>
             <Link variant="h6" onClick={handleTitleClick} className={clsx(classes.paddingTopSmall, classes.cursorPointer)}>
                 {movie.name}
             </Link>
@@ -101,20 +100,20 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
             {
                 isDetailsOpen &&
                 <>
-                    <Box className={classes.padding}>
+                    <Box className={classes.paddingBig}>
                         <Divider variant="middle"/>
                     </Box>
                     <Typography variant="body1" gutterBottom>
                         Details
                     </Typography>
-                    {(wikipediaPageExtract && wikipediaPageUrl && imdbPageUrl) ?
+                    {(wikipediaInfo && imdbPageUrl) ?
                         <>
                             <Typography variant="body2" gutterBottom >
-                                {shortenString(wikipediaPageExtract)}
+                                {shortenString(wikipediaInfo.extract)}
                             </Typography>
                             <Container className={clsx(classes.paddingSmall, classes.widthFitContent)}>
                                 <Box component="span" className={classes.margin}>
-                                    <Link href={wikipediaPageUrl} target="_blank" rel="noreferrer">
+                                    <Link href={wikipediaInfo.fullurl} target="_blank" rel="noreferrer">
                                         Wikipedia page
                                     </Link>
                                 </Box>
@@ -128,10 +127,10 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
                                         variant="outlined"
                                         color="primary"
                                         onClick={handleRelatedClick}
-                                        disabled={loading}
-                                        endIcon={loading && <CircularProgress size="0.7rem"/>}
+                                        disabled={isRelatedMoviesLoading}
+                                        endIcon={isRelatedMoviesLoading && <CircularProgress size="0.7rem"/>}
                                     >
-                                        Related
+                                        Related movies
                                     </Button>
                                 </Box>
                             </Container>
