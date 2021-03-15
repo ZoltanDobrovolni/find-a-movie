@@ -4,21 +4,17 @@ export type Movie = {
     name: string;
     releaseDate: string;
     score: number;
-    // similar: any[];
     votes: number;
-    genres: any[]; // todo
+    genres: MovieGenre[];
 };
 
-export type SearchResult<T> = {
-    totalPages: number;
-    totalResults: number;
-    page: number;
-    results: T[];
-};
+type MovieGenre = {
+    id: number;
+    name: string;
+}
 
 export type MoviesSearchQueryResult = {
     searchMovies: Movie[];
-    //     allMovies: SearchResult<Movie>;
 }
 
 export type WikipediaSearchResult = {
