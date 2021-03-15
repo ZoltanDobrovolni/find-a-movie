@@ -6,7 +6,7 @@ import Rating from '@material-ui/lab/Rating';
 import {commonStyle} from '../styles/styles';
 import {Movie} from '../types/types';
 import {getWikipediaInfoById, searchForWikipediaMovie} from '../apis/wikipediaAPI';
-import {getIMDBFullUrl} from '../apis/imdbAPI';
+import {fetchIMDBFullUrl} from '../apis/imdbAPI';
 import {useLazyQuery} from "@apollo/client";
 import {GET_MOVIE_QUERY} from "../apis/theMovieDatabaseAPI";
 import {shortenString} from "../misc/helper";
@@ -44,7 +44,6 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
     const [imdbPageUrl, setImdbPageUrl] = useState<string | null>(null);
     const [getMovies, {loading, data}] = useLazyQuery<RelatedMoviesQueryResult, GetMovieQueryVars>(GET_MOVIE_QUERY)
 
-
     const releaseYear = movie.releaseDate && (new Date(Date.parse(movie.releaseDate))).getUTCFullYear();
 
     useEffect(() => {
@@ -60,7 +59,6 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
 
     useEffect(() => {
         if (data) {
-            console.log(`Related movies: `, data.movie.similar);
             setSearchMovieResult([]);
             setTimeout(() =>
                 setSearchMovieResult(data.movie.similar)
@@ -71,33 +69,30 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
 
     const handleTitleClick = async () => {
         if (!wikipediaPageId) {
-            console.log(`Searching for movie: ${movie.name}, ${releaseYear}`)
             const wikipediaPageId = await searchForWikipediaMovie(movie.name, releaseYear);
             setWikipediaPageId(wikipediaPageId);
-            getIMDBFullUrl(movie.name, setImdbPageUrl);
+            fetchIMDBFullUrl(movie.name, setImdbPageUrl);
         }
         setIsDetailsOpen(!isDetailsOpen);
     }
 
-    const handleRelatedClick = async () => {
-        console.log(`Searching for related movies: ${movie.id}`)
+    const handleRelatedClick = async () =>
         getMovies({variables: {id: movie.id}});
-    }
 
     const concatenatedGenres = movie.genres.map(genre => genre.name).join(', ');
 
     return (
         <Paper className={clsx(classes.padding, classes.marginBig, classes.paper)}>
-            <Link variant="h6" onClick={handleTitleClick} className={classes.paddingTopSmall}>
+            <Link variant="h6" onClick={handleTitleClick} className={clsx(classes.paddingTopSmall, classes.cursorPointer)}>
                 {movie.name}
             </Link>
             <Typography variant="body2" gutterBottom>
                 {concatenatedGenres}
             </Typography>
             <Tooltip title={`${movie.score} / 10`} arrow>
-                <span>
+                <Box component="span">
                     <Rating name="half-rating-read" value={movie.score / 2} precision={0.5} readOnly/>
-                </span>
+                </Box>
             </Tooltip>
             {
                 isDetailsOpen &&
@@ -115,14 +110,14 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setSearchMovieResult}) => {
                             </Typography>
                             <Container maxWidth="xs" className={classes.paddingSmall}>
                                 <Box component="span" className={classes.margin}>
-                                    <a href={wikipediaPageUrl} target="_blank" rel="noreferrer">
+                                    <Link href={wikipediaPageUrl} target="_blank" rel="noreferrer">
                                         Wikipedia page
-                                    </a>
+                                    </Link>
                                 </Box>
                                 <Box component="span" className={classes.margin}>
-                                    <a href={imdbPageUrl} target="_blank" rel="noreferrer">
+                                    <Link href={imdbPageUrl} target="_blank" rel="noreferrer">
                                         IMDB page
-                                    </a>
+                                    </Link>
                                 </Box>
                                 <Box component="span" className={classes.margin}>
                                     <Button

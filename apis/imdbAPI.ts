@@ -1,5 +1,5 @@
 
-export const getIMDBFullUrl = (movieTitle: string, updateIMDBUrlCallback: (imdbUrl: string) => void): void => {
+export const fetchIMDBFullUrl = (movieTitle: string, updateIMDBUrlCallback: (imdbUrl: string) => void): void => {
     const sanitizedMovieTitle = movieTitle.toLowerCase().replace(/\W/g, '');
     function addScript(src: string) { var s = document.createElement('script'); s.src = src; document.head.appendChild(s); }
     // @ts-ignore

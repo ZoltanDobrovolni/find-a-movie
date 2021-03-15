@@ -18,4 +18,7 @@ export const commonStyle = {
     paddingTopSmall: {
         paddingTop: 5,
     },
+    cursorPointer: {
+        cursor: 'pointer',
+    }
 };
