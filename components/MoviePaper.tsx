@@ -113,7 +113,11 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie, setSearchMovieResult }) => {
                             <a href={imdbPageUrl} target="_blank" rel="noreferrer">
                                 IMDB page
                             </a>
-                            <Button onClick={handleRelatedClick}>
+                            <Button
+                                    onClick={handleRelatedClick}
+                                    disabled={loading}
+                                    endIcon={loading && <CircularProgress size="0.7rem" />}
+                            >
                                 Related
                             </Button>
                         </>
