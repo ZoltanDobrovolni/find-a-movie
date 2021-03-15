@@ -5,11 +5,11 @@ import {commonStyle} from '../styles/styles';
 import SearchBar from '../components/SearchBar';
 import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
 import MovieSearchResults from '../components/MovieSearchResults';
-import {TMDBW_URL} from '../apis/theMovieDatabaseAPI';
+import {THE_MOVIE_DATABASE_URL} from '../apis/theMovieDatabaseAPI';
 import {Movie} from '../types/types';
 
 const client = new ApolloClient({
-    uri: TMDBW_URL,
+    uri: THE_MOVIE_DATABASE_URL,
     cache: new InMemoryCache(),
 });
 

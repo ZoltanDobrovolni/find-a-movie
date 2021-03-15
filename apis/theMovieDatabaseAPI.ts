@@ -1,6 +1,6 @@
 import {gql} from '@apollo/client';
 
-export const TMDBW_URL = 'https://tmdb.sandbox.zoosh.ie/dev/graphql';
+export const THE_MOVIE_DATABASE_URL = 'https://tmdb.sandbox.zoosh.ie/dev/graphql';
 
 export const SEARCH_MOVIE_QUERY = gql`
 query myCustomSearch($title: String!) {
@@ -18,11 +18,11 @@ query myCustomSearch($title: String!) {
 `;
 
 export const GET_MOVIE_QUERY = gql`
-query myCustomSearch($id: ID!) {
+query myCustomSearch($id: ID!, $limit: Int = 10) {
     movie(id: $id) {
         id
         name
-        similar(limit: 10) {
+        similar(limit: $limit) {
             id
             name
             releaseDate
