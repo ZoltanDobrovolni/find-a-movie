@@ -3,6 +3,7 @@ import clsx from "clsx";
 import {Paper, CircularProgress, Divider, Tooltip, Typography, Link, Button, Box, Container} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
+import { useDispatch } from 'react-redux';
 import {commonStyle} from '../styles/styles';
 import {Movie, WikipediaSearchResult} from '../types/types';
 import {getWikipediaInfoById, searchForWikipediaMovie} from '../apis/wikipediaAPI';
@@ -10,10 +11,10 @@ import {fetchIMDBFullUrl} from '../apis/imdbAPI';
 import {useLazyQuery} from "@apollo/client";
 import {GET_MOVIE_QUERY} from "../apis/theMovieDatabaseAPI";
 import {shortenString} from "../misc/helper";
+import { setMovies } from '../store/moviesSlice';
 
 type MoviePaperProps = {
     movie: Movie;
-    setMovies: (movies: Movie[] | undefined) => void;
 }
 
 type GetMovieQueryVars = {
@@ -39,8 +40,9 @@ const useStyles = makeStyles({
     }
 });
 
-const MoviePaper: FC<MoviePaperProps> = ({movie, setMovies}) => {
+const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
     const classes = useStyles();
+    const dispatch = useDispatch();
     const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
     const [wikipediaPageId, setWikipediaPageId] = useState<number | null>(null);
     const [wikipediaInfo, setWikipediaInfo] = useState<WikipediaSearchResult | null>(null);
@@ -62,12 +64,12 @@ const MoviePaper: FC<MoviePaperProps> = ({movie, setMovies}) => {
 
     useEffect(() => {
         if (relatedMovies) {
-            setMovies([]);
+            dispatch(setMovies([]));
             setTimeout(() =>
-                setMovies(relatedMovies.movie.similar)
+                dispatch(setMovies(relatedMovies.movie.similar))
             );
         }
-    }, [relatedMovies]);
+    }, [relatedMovies, dispatch]);
 
 
     const handleTitleClick = async () => {

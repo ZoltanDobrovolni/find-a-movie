@@ -9,19 +9,18 @@ import {
     InputAdornment,
 } from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux';
 import { useLazyQuery } from '@apollo/client';
 import {commonStyle} from '../styles/styles';
-import { Movie, MoviesSearchQueryResult } from '../types/types';
+import { MoviesSearchQueryResult } from '../types/types';
 import { SEARCH_MOVIE_QUERY } from '../apis/theMovieDatabaseAPI';
 import clsx from "clsx";
+import { setMovies } from '../store/moviesSlice';
 
 type SearchButtonEventHandler = () => void;
 type InputChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => void;
 type MoviesSearchQueryVars = {
     title: string;
-}
-type SearchBarProps = {
-    handleSearchResultChange: (movies: Movie[] | undefined) => void;
 }
 
 const useStyles = makeStyles({
@@ -31,8 +30,9 @@ const useStyles = makeStyles({
     },
 });
 
-const SearchBar : FC<SearchBarProps> = ({ handleSearchResultChange }) => {
+const SearchBar : FC = () => {
     const classes = useStyles();
+    const dispatch = useDispatch();
     const [searchInputValue, setSearchInputValue] = useState<string>('');
     const [fetchMovies, { loading, data: movies }] = useLazyQuery<MoviesSearchQueryResult, MoviesSearchQueryVars>(
         SEARCH_MOVIE_QUERY
@@ -40,9 +40,9 @@ const SearchBar : FC<SearchBarProps> = ({ handleSearchResultChange }) => {
 
     useEffect(() => {
         if (movies) {
-            handleSearchResultChange(movies.searchMovies);
+            dispatch(setMovies(movies.searchMovies));
         }
-    }, [movies, handleSearchResultChange]);
+    }, [movies, dispatch]);
 
     const handleSearch: SearchButtonEventHandler = () =>
         fetchMovies({ variables: { title: searchInputValue }});

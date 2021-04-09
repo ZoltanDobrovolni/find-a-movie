@@ -1,17 +1,16 @@
 import React, { FC } from 'react';
+import { useSelector } from 'react-redux';
+import { selectMovies } from '../store/moviesSlice';
 import { Movie } from '../types/types';
 import MoviePaper from './MoviePaper';
 
-type MovieSearchResultProps = {
-    movies: Movie[];
-    setMovies: (movies: Movie[] | undefined) => void;
-}
-
-const MovieSearchResults: FC<MovieSearchResultProps> = ({ movies, setMovies }) => {
+const MovieSearchResults: FC = () => {
+    const movies = useSelector(selectMovies);
+    
     return (
         <>
             {movies.map(movie => (
-                <MoviePaper movie={movie} key={movie.id} setMovies={setMovies}/>
+                <MoviePaper movie={movie} key={movie.id} />
             ))}
         </>
     );
