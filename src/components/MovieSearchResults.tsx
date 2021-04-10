@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { selectMovies } from '../store/moviesSlice';
-import { Movie } from '../types/types';
 import MoviePaper from './MoviePaper';
 
 const MovieSearchResults: FC = () => {

@@ -12,6 +12,7 @@ import {useLazyQuery} from "@apollo/client";
 import {GET_MOVIE_QUERY} from "../apis/theMovieDatabaseAPI";
 import {shortenString} from "../misc/helper";
 import { setMovies } from '../store/moviesSlice';
+import { AppDispatch } from '../store/store';
 
 type MoviePaperProps = {
     movie: Movie;
@@ -42,7 +43,7 @@ const useStyles = makeStyles({
 
 const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
     const [wikipediaPageId, setWikipediaPageId] = useState<number | null>(null);
     const [wikipediaInfo, setWikipediaInfo] = useState<WikipediaSearchResult | null>(null);

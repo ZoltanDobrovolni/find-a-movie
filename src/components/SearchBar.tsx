@@ -16,6 +16,7 @@ import { MoviesSearchQueryResult } from '../types/types';
 import { SEARCH_MOVIE_QUERY } from '../apis/theMovieDatabaseAPI';
 import clsx from "clsx";
 import { setMovies } from '../store/moviesSlice';
+import { AppDispatch } from '../store/store';
 
 type SearchButtonEventHandler = () => void;
 type InputChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -32,7 +33,7 @@ const useStyles = makeStyles({
 
 const SearchBar : FC = () => {
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const [searchInputValue, setSearchInputValue] = useState<string>('');
     const [fetchMovies, { loading, data: movies }] = useLazyQuery<MoviesSearchQueryResult, MoviesSearchQueryVars>(
         SEARCH_MOVIE_QUERY
