@@ -1,10 +1,9 @@
 This is a webapp, where you can search for movies.
 
-[Deployed here](https://find-a-movie.vercel.app/)
-
 ## Tech stack
 
-TypeScript, Next.js, React.js, GraphQL
+TypeScript, React.js, Redux, Next.js, GraphQL, Apollo client, Material UI
+Deployed with Vercel
 
 ## Getting Started
 
