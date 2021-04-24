@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import {commonStyle} from '../styles/styles';
 import {Movie, WikipediaSearchResult} from '../types/types';
 import {getWikipediaInfoById, searchForWikipediaMovie} from '../apis/wikipediaAPI';
-import {fetchIMDBFullUrl} from '../apis/imdbAPI';
+import {fetchIMDBFullUrl, getIMDBFullUrl} from '../apis/imdbAPI';
 import {useLazyQuery} from "@apollo/client";
 import {GET_MOVIE_QUERY} from "../apis/theMovieDatabaseAPI";
 import {shortenString} from "../misc/helper";
@@ -77,7 +77,9 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
         if (!wikipediaPageId) {
             const wikipediaPageId = await searchForWikipediaMovie(movie.name, releaseYear);
             setWikipediaPageId(wikipediaPageId);
-            fetchIMDBFullUrl(movie.name, setImdbPageUrl);
+            // fetchIMDBFullUrl(movie.name, setImdbPageUrl);
+            const imdbUrl = await getIMDBFullUrl(movie.name, releaseYear);
+            setImdbPageUrl(imdbUrl);
         }
         setIsDetailsOpen(!isDetailsOpen);
     }
