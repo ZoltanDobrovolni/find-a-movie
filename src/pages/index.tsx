@@ -18,10 +18,6 @@ const useStyles = makeStyles(commonStyle);
 
 const Home = () => {
     const classes = useStyles();
-    // itt elérhető ez process.env.OMDB_API_KEY
-    console.log('AAAAAAAApi key in pages/index: ', process.env.OMDB_API_KEY);
-    console.log('MYTEST_ENV key in pages/index: ', process.env.MYTEST_ENV);
-    console.log('NEXT_PUBLIC_MYTEST_ENV key in pages/index: ', process.env.NEXT_PUBLIC_MYTEST_ENV);
 
     return (
         <React.StrictMode>
