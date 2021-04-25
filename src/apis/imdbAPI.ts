@@ -14,7 +14,7 @@ export const fetchIMDBFullUrl = (movieTitle: string, updateIMDBUrlCallback: (imd
 }
 
 export const getIMDBFullUrl = async (movieTitle: string, year: number): Promise<string> => {
-    console.log('AAAAAAAApi key: ', process.env.VERCEL_ENV, process.env.NEXT_PUBLIC_OMDB_API_KEY, process.env.OMDB_API_KEY);
+    console.log('AAAAAAAApi key: ', process.env.VERCEL_ENV, process.env.NEXT_PUBLIC_OMDB_API_KEY);
     const BASE_URL = 'http://www.omdbapi.com'
     const params =  {
         t: movieTitle,
