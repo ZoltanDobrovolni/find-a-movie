@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux';
 import { useLazyQuery } from '@apollo/client';
 import {commonStyle} from '../styles/styles';
 import { MoviesSearchQueryResult } from '../types/types';
-import { SEARCH_MOVIE_QUERY } from '../apis/theMovieDatabaseAPI';
+import { SEARCH_MOVIE_BY_TITLE_QUERY } from '../apis/theMovieDatabaseAPI';
 import clsx from "clsx";
 import { setMovies } from '../store/moviesSlice';
 import { AppDispatch } from '../store/store';
@@ -36,7 +36,7 @@ const SearchBar : FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const [searchInputValue, setSearchInputValue] = useState<string>('');
     const [fetchMovies, { loading, data: movies }] = useLazyQuery<MoviesSearchQueryResult, MoviesSearchQueryVars>(
-        SEARCH_MOVIE_QUERY
+        SEARCH_MOVIE_BY_TITLE_QUERY
     );
 
     useEffect(() => {

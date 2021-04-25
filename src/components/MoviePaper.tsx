@@ -9,7 +9,7 @@ import {Movie, WikipediaSearchResult} from '../types/types';
 import {getWikipediaInfoById, searchForWikipediaMovie} from '../apis/wikipediaAPI';
 import {getIMDBFullUrl} from '../apis/imdbAPI';
 import {useLazyQuery} from "@apollo/client";
-import {GET_MOVIE_QUERY} from "../apis/theMovieDatabaseAPI";
+import {GET_MOVIE_BY_ID_QUERY} from "../apis/theMovieDatabaseAPI";
 import {shortenString} from "../misc/helper";
 import { setMovies } from '../store/moviesSlice';
 import { AppDispatch } from '../store/store';
@@ -49,7 +49,7 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
     const [wikipediaInfo, setWikipediaInfo] = useState<WikipediaSearchResult | null>(null);
     const [imdbPageUrl, setImdbPageUrl] = useState<string | null>(null);
     const [fetchRelatedMovies, {loading: isRelatedMoviesLoading, data: relatedMovies}] =
-        useLazyQuery<RelatedMoviesQueryResult, GetMovieQueryVars>(GET_MOVIE_QUERY);
+        useLazyQuery<RelatedMoviesQueryResult, GetMovieQueryVars>(GET_MOVIE_BY_ID_QUERY);
 
     const releaseYear = movie.releaseDate && (new Date(Date.parse(movie.releaseDate))).getUTCFullYear();
 
@@ -74,13 +74,13 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
 
 
     const handleTitleClick = async () => {
+        setIsDetailsOpen(!isDetailsOpen);
         if (!wikipediaPageId) {
             const wikipediaPageId = await searchForWikipediaMovie(movie.name, releaseYear);
             setWikipediaPageId(wikipediaPageId);
             const imdbUrl = await getIMDBFullUrl(movie.name, releaseYear);
             setImdbPageUrl(imdbUrl);
         }
-        setIsDetailsOpen(!isDetailsOpen);
     }
 
     const handleRelatedClick = async () =>
