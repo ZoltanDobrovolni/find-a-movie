@@ -76,9 +76,9 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
     const handleTitleClick = async () => {
         setIsDetailsOpen(!isDetailsOpen);
         if (!wikipediaPageId) {
-            const wikipediaPageId = await searchForWikipediaMovie(movie.name, releaseYear);
+            const wikipediaPageId = await searchForWikipediaMovie(movie.title, releaseYear);
             setWikipediaPageId(wikipediaPageId);
-            const imdbUrl = await getIMDBFullUrl(movie.name, releaseYear);
+            const imdbUrl = await getIMDBFullUrl(movie.title, releaseYear);
             setImdbPageUrl(imdbUrl);
         }
     }
@@ -91,14 +91,14 @@ const MoviePaper: FC<MoviePaperProps> = ({ movie }) => {
     return (
         <Paper className={clsx(classes.paddingBig, classes.marginBig, classes.paper)}>
             <Link variant="h6" onClick={handleTitleClick} className={clsx(classes.paddingTopSmall, classes.cursorPointer)}>
-                {movie.name}
+                {movie.title}
             </Link>
             <Typography variant="body2" gutterBottom>
                 {concatenatedGenres}
             </Typography>
-            <Tooltip title={`${movie.score} / 10`} arrow>
+            <Tooltip title={`${movie.rating} / 10`} arrow>
                 <Box component="span">
-                    <Rating name="half-rating-read" value={movie.score / 2} precision={0.5} readOnly/>
+                    <Rating name="half-rating-read" value={movie.rating / 2} precision={0.5} readOnly/>
                 </Box>
             </Tooltip>
             {

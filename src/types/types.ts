@@ -1,10 +1,9 @@
 
 export type Movie = {
     id: number;
-    name: string;
+    title: string;
     releaseDate: string;
-    score: number;
-    votes: number;
+    rating: number;
     genres: MovieGenre[];
 };
 
@@ -13,9 +12,6 @@ type MovieGenre = {
     name: string;
 }
 
-export type MoviesSearchQueryResult = {
-    searchMovies: Movie[];
-}
 
 export type WikipediaSearchResult = {
     pageid: number;
