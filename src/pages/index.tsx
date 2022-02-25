@@ -26,7 +26,7 @@ const Home = () => {
                     <Box>
                         <Grid container
                               direction="column"
-                              justify="center"
+                              justifyContent="center"
                               alignItems="center"
                               spacing={3}
                               className={classes.padding}>
